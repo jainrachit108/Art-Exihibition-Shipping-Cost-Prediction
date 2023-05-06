@@ -28,7 +28,7 @@ class DataIngestion:
             df.to_csv(path_or_buf=self.data_ingestion_config.training_file_path, index = False, header = True)
             logging.info('Successfully Loaded Data info the given directory')
             
-            data_ingestion_artifact = artifact_entity.DataIngestionArtifact(train_file_path=train_file_dir)
+            data_ingestion_artifact = artifact_entity.DataIngestionArtifact(train_file_path=self.data_ingestion_config.training_file_path)
             logging.info(f'Data ingestion Artifact {data_ingestion_artifact}')
             return data_ingestion_artifact
         except Exception as e:

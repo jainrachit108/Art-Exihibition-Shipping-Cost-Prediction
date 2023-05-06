@@ -4,7 +4,7 @@ import sys, os
 from datetime import datetime
 import pandas as pd
 TRAINING_FILE_NAME = 'training_file.csv'
-
+VALIDATED_FILE_NAME = 'validated_dataset.csv'
 class TrainingPipelineConfig:
     
     def __init__(self):
@@ -21,7 +21,7 @@ class DataIngestionConfig:
             self.collection_name  = 'Shipping_Cost_dataset'
             self.data_ingestion_dir = os.path.join(training_pipeline_config.artifact_dir, 'data_ingestion')
             self.training_file_path = os.path.join(self.data_ingestion_dir, 'Training dataset', TRAINING_FILE_NAME)
-  
+
         except Exception as e:
             raise ShippingException
         
@@ -31,3 +31,15 @@ class DataIngestionConfig:
             return self.__dict__
         except Exception as e:
             raise ShippingException
+        
+        
+class DataValidationConfig:
+    def __init__(self, training_pipeline_config:TrainingPipelineConfig) -> None:
+        try:
+            #if 50% of data in any feature is missing, it is dropped
+            self.max_missing_features = 0.5 
+            self.data_validation_dir = os.path.join(training_pipeline_config.artifact_dir, "data validation")
+            self.validated_dataset_path = os.path.join(self.data_validation_dir, 'Validated dataset', VALIDATED_FILE_NAME)               
+            
+        except Exception as e:
+            ShippingException(e, sys)
