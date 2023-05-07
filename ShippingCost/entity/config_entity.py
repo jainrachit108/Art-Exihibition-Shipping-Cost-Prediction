@@ -5,6 +5,12 @@ from datetime import datetime
 import pandas as pd
 TRAINING_FILE_NAME = 'training_file.csv'
 VALIDATED_FILE_NAME = 'validated_dataset.csv'
+X_TRAIN_DATA = 'X_train.npy'
+X_TEST_DATA = 'X_test.npy'
+Y_TRAIN_DATA = 'Y_train.npy'
+Y_TEST_DATA = 'Y_test.npy'
+
+
 class TrainingPipelineConfig:
     
     def __init__(self):
@@ -39,7 +45,18 @@ class DataValidationConfig:
             #if 50% of data in any feature is missing, it is dropped
             self.max_missing_features = 0.5 
             self.data_validation_dir = os.path.join(training_pipeline_config.artifact_dir, "data validation")
-            self.validated_dataset_path = os.path.join(self.data_validation_dir, 'Validated dataset', VALIDATED_FILE_NAME)               
-            
+            self.validated_dataset_path = os.path.join(self.data_validation_dir, 'Validated dataset', VALIDATED_FILE_NAME)                          
+        except Exception as e:
+            ShippingException(e, sys)
+        
+class DataTransformationConfig:
+    def __init__(self, training_pipeline_config: TrainingPipelineConfig) -> None:
+        try:
+            self.data_transformation_dir = os.path.join(training_pipeline_config.artifact_dir , "data_transformation")
+            self.Xtrain_dataset = os.path.join(self.data_transformation_dir, 'X_train data',X_TRAIN_DATA)
+            self.Xtest_dataset = os.path.join(self.data_transformation_dir, 'X_test data', X_TEST_DATA)
+            self.Ytrain_dataset = os.path.join(self.data_transformation_dir, 'Y_train data', Y_TRAIN_DATA)
+            self.Ytest_dataset = os.path.join(self.data_transformation_dir, 'Y_test data', Y_TEST_DATA)
+        
         except Exception as e:
             ShippingException(e, sys)

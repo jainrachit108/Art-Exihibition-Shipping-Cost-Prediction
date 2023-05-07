@@ -32,3 +32,18 @@ def get_collection_as_dataFrame(database_name : str , collection_name: str)->pd.
     except Exception as e:
         raise ShippingException(e, sys)
     
+    
+    
+def save_numpy_array_data(file_path: str, array: np.array):
+    """
+    Save numpy array data to file
+    file_path: str location of file to save
+    array: np.array data to save
+    """
+    try:
+        dir_path = os.path.dirname(file_path)
+        os.makedirs(dir_path, exist_ok= True)
+        with open(file_path, 'wb') as file_obj:
+            np.save(file_obj, array)
+    except Exception as e:
+        ShippingException(e, sys)
