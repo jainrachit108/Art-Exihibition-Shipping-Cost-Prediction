@@ -10,8 +10,16 @@ class DataValidationArtifact:
 
 @dataclass
 class DataTransformationArtifact:
-    X_train_array_path : str
-    X_test_array_path : str
-    y_train_array_path : str
-    y_test_array_path : str
+  
+        Xtrain_dataset_path: str
+        Xtest_dataset_path : str
+        Ytrain_dataset_path: str
+        Ytest_dataset_path: str
+        ohe_object_path : str
+        
+@dataclass
+class ModelTrainerArtifact:
+    
+    model_obj_path : str
+    
         

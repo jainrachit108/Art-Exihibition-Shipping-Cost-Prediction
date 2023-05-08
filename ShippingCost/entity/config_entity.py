@@ -5,10 +5,13 @@ from datetime import datetime
 import pandas as pd
 TRAINING_FILE_NAME = 'training_file.csv'
 VALIDATED_FILE_NAME = 'validated_dataset.csv'
-X_TRAIN_DATA = 'X_train.npy'
-X_TEST_DATA = 'X_test.npy'
-Y_TRAIN_DATA = 'Y_train.npy'
-Y_TEST_DATA = 'Y_test.npy'
+X_TRAIN_DATA = 'X_train.npz'
+X_TEST_DATA = 'X_test.npz'
+Y_TRAIN_DATA = 'Y_train.npz'
+Y_TEST_DATA = 'Y_test.npz'
+OHE_OBJ_FILE = 'ohe_obj.pkl'
+MODEL_OBJ_FILE = 'model.pkl'
+
 
 
 class TrainingPipelineConfig:
@@ -47,16 +50,26 @@ class DataValidationConfig:
             self.data_validation_dir = os.path.join(training_pipeline_config.artifact_dir, "data validation")
             self.validated_dataset_path = os.path.join(self.data_validation_dir, 'Validated dataset', VALIDATED_FILE_NAME)                          
         except Exception as e:
-            ShippingException(e, sys)
+            raise ShippingException(e, sys)
         
 class DataTransformationConfig:
     def __init__(self, training_pipeline_config: TrainingPipelineConfig) -> None:
         try:
             self.data_transformation_dir = os.path.join(training_pipeline_config.artifact_dir , "data_transformation")
-            self.Xtrain_dataset = os.path.join(self.data_transformation_dir, 'X_train data',X_TRAIN_DATA)
-            self.Xtest_dataset = os.path.join(self.data_transformation_dir, 'X_test data', X_TEST_DATA)
-            self.Ytrain_dataset = os.path.join(self.data_transformation_dir, 'Y_train data', Y_TRAIN_DATA)
-            self.Ytest_dataset = os.path.join(self.data_transformation_dir, 'Y_test data', Y_TEST_DATA)
-        
+            self.Xtrain_dataset_path = os.path.join(self.data_transformation_dir,'X_train array',X_TRAIN_DATA)
+            self.Xtest_dataset_path = os.path.join(self.data_transformation_dir,'X_test array',  X_TEST_DATA)
+            self.Ytrain_dataset_path = os.path.join(self.data_transformation_dir,'Y_train array', Y_TRAIN_DATA)
+            self.Ytest_dataset_path = os.path.join(self.data_transformation_dir,'Y_test array', Y_TEST_DATA)
+            self.ohe_object_path = os.path.join(self.data_transformation_dir, 'ohe object', OHE_OBJ_FILE)
         except Exception as e:
-            ShippingException(e, sys)
+            raise ShippingException(e, sys)
+            
+class ModelTrainingConfig:
+    def __init__(self, training_pipeline_config : TrainingPipelineConfig) -> None:
+        try:
+            self.model_trainer_dir = os.path.join(training_pipeline_config.artifact_dir, 'Model trainer')
+            self.model_obj_path = os.path.join(self.model_trainer_dir, 'model_object', MODEL_OBJ_FILE)
+            
+            
+        except Exception as e:
+            raise ShippingException(e ,sys)

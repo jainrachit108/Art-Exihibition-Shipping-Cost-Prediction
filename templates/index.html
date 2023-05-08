@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Art Shipping Calculator</title>
+</head>
+<body>
+	<h1>Art Shipping Calculator</h1>
+	<form action="{{ url_for('predict')}}" method="post">
+		<label for="artist-name">Artist Name:</label>
+		<input type="text" id="artist-name" name="artist-name"><br><br>
+		
+		<label for="artist-reputation">Artist Reputation (0-1):</label>
+		<input type="number" id="artist-reputation" name="artist-reputation" min="0" max="1" step="0.01"><br><br>
+		
+		<label for="height">Height:</label>
+		<input type="number" id="height" name="height"><br><br>
+		
+		<label for="width">Width:</label>
+		<input type="number" id="width" name="width"><br><br>
+		
+		<label for="weight">Weight:</label>
+		<input type="number" id="weight" name="weight"><br><br>
+		
+		<label for="material">Material:</label>
+		<select id="material" name="material">
+			<option value="Aluminium">Aluminium</option>
+			<option value="Brass">Brass</option>
+			<option value="Bronze">Bronze</option>
+			<option value="Clay">Clay</option>
+			<option value="Marble">Marble</option>
+			<option value="Stone">Stone</option>
+			<option value="Wood">Wood</option>
+		</select><br><br>
+		
+		<label for="international">International:</label>
+		<select id="international" name="international">
+			<option value="Yes">Yes</option>
+			<option value="No">No</option>
+		</select><br><br>
+		
+		<label for="express-shipment">Express Shipment:</label>
+		<select id="express-shipment" name="express-shipment">
+			<option value="Yes">Yes</option>
+			<option value="No">No</option>
+		</select><br><br>
+		
+		<label for="installation-included">Installation Included:</label>
+		<select id="installation-included" name="installation-included">
+			<option value="Yes">Yes</option>
+			<option value="No">No</option>
+		</select><br><br>
+		
+		<label for="transportation">Transportation:</label>
+		<select id="transportation" name="transportation">
+			<option value="Airways">Airways</option>
+			<option value="Roadways">Roadways</option>
+			<option value="Waterways">Waterways</option>
+		</select><br><br>
+		
+		<label for="fragile">Fragile:</label>
+		<select id="fragile" name="fragile">
+			<option value="Yes">Yes</option>
+			<option value="No">No</option>
+		</select><br><br>
+		
+		<label for="customer-info">Customer Information:</label>
+		<select id="customer-info" name="customer-info">
+			<option value="Wealthy">Wealthy</option>
+			<option value="Working Class">Working Class</option>
+		</select><br><br>
+		
+		<label for="remote-location">Remote Location:</label>
+		<select id="remote-location" name="remote-location">
+		    <option value="Yes">Yes</option>
+		    <option value="No">No</option>
+	    </select><br><br>
+	
+	    <input type="submit" value="Calculate Shipping Cost">
+</form>
+<br>
+<br>
+{{prediction_text}}
+
+
+</body>
+</html>

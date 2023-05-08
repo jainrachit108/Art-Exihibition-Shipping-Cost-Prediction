@@ -6,6 +6,8 @@ from ShippingCost.components.data_ingestion import DataIngestion
 from ShippingCost.entity import config_entity, artifact_entity
 from ShippingCost.components.data_validation import DataValidation
 from ShippingCost.components.data_transformation import DataTransformation
+from ShippingCost.components.model_training import ModelTrainer
+
 
 def start_pipeline():
     try:
@@ -25,7 +27,11 @@ def start_pipeline():
         data_tranformation = DataTransformation(data_transformation_config=data_transformation_config, data_validation_artifact= data_validation_artifact)
         data_tranformation_artifact = data_tranformation.initiate_data_transformation()
     
-    
+        model_trainer_config = config_entity.ModelTrainingConfig(training_pipeline_config=training_pipeline_config)
+        model_trainer = ModelTrainer(data_transformation_artifact=data_tranformation_artifact, model_training_config=model_trainer_config)
+        model_trainer_artifact = model_trainer.initiate_model_training()
+        
+        
     except Exception as e:
         raise ShippingException(e, sys)
 

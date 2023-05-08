@@ -9,7 +9,7 @@ from sklearn.preprocessing import OneHotEncoder
 from sklearn.impute import KNNImputer
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import RobustScaler
-from ShippingCost.utils import save_numpy_array_data
+from ShippingCost.utils import save_numpy_array_data, load_numpy_array_data , save_object, load_object
 
 
 
@@ -23,7 +23,7 @@ class DataTransformation:
             self.data_validation_artifact = data_validation_artifact
         
         except Exception as e:
-            ShippingException(e, sys)
+            raise ShippingException(e, sys)
             
             
             
@@ -36,7 +36,7 @@ class DataTransformation:
             return df
 
         except Exception as e:
-            ShippingException(e, sys)
+            raise ShippingException(e, sys)
     
     def remove_outliers_iqr(self,dataframe, column):
         """
@@ -63,22 +63,33 @@ class DataTransformation:
             logging.info(f"{'<<'*20} Data Transformation {'>>' * 20}")
             logging.info('Loading validated dataset')
             df = pd.read_csv(self.data_validation_artifact.validated_dataset_path)
-            
             #Randomly imputing missing values of Height, Width and Artist Reputation
+            df['Cost'] = df['Cost'].abs()
+            logging.info(f"Null values before imputation in Height {df['Height'].isna().sum()}")
             logging.info('Randomly Imputing missing values of Height')
             df = self.random_imputation(df , 'Height')
+            logging.info(f"Null values after imputation in Height {df['Height'].isna().sum()}")
             logging.info('Randomly Imputing missing values of Width')
+            logging.info(f"Null values before imputation in Width {df['Width'].isna().sum()}")
             df = self.random_imputation(df, 'Width')
+            logging.info(f"Null values after imputation in Width {df['Width'].isna().sum()}")
+            logging.info(f"Null values before imputation in Artist Reputation {df['Artist Reputation'].isna().sum()}")
             logging.info('Randomly imputing the missing values of Artist Reputation')
             df = self.random_imputation(df, 'Artist Reputation')
+            logging.info(f"Null values after imputation in Artist Reputation {df['Artist Reputation'].isna().sum()}")
+            
             
             #One-hot Encoding 
             logging.info('One-hot Encoding the Categorical Columns')
+            logging.info(f'Shape of Dataframe before one hot encoding {df.shape}')
             logging.info('Creating one-hot Encoder object')
             encoder = OneHotEncoder(sparse = False, handle_unknown = 'ignore')
+            
             logging.info('One hot encoding "Material, International, Express Shipment, Installation Included, Transport, Fragile, Customer Information, Remote Location')
             df_encoded = encoder.fit_transform(df[['Material','International','Express Shipment', 'Installation Included','Transport','Fragile', 'Customer Information', 'Remote Location']])
             df_encoded = pd.DataFrame(df_encoded,  columns = encoder.get_feature_names_out(['Material','International','Express Shipment','Installation Included','Transport','Fragile', 'Customer Information', 'Remote Location']))
+            
+            
             
             df_encoded.drop(['Transport_nan', 'Remote Location_nan','Material_nan'], axis = 1, inplace = True)
             logging.info('OneHotEncoding completed Successfully')
@@ -86,17 +97,23 @@ class DataTransformation:
             
             numerical_cols = ['Artist Reputation','Height','Width'	,'Weight','Price Of Sculpture','Base Shipping Price']
             X = pd.concat([df[numerical_cols] , df_encoded], axis= 1)
+            logging.info(f'Shape of Dataframe after one hot encoding {X.shape}')
+
             
             #Performing KNN Imputation on dataset to impute values of weight column
+            logging.info('Imputing null values of Weight with KNN imputer')
+            logging.info(f"Finding null values in weight {X['Weight'].isna().sum()}")
             imputer = KNNImputer(n_neighbors=5)
             imputed_df = imputer.fit_transform(X)
             X = pd.DataFrame(imputed_df, columns=X.columns)
-            df_new = pd.concat([X , df['Cost']], axis =1)
+            logging.info(f"Finding null values in weight {X['Weight'].isna().sum()}")
 
+            df_new = pd.concat([X , df['Cost']], axis =1)
 
             #Removing outliers
             
             logging.info('Removing Outliers from Height')
+            logging.info(f"Shape of the dataframe before removing outliers{df_new.shape}")
             df_new = self.remove_outliers_iqr(df_new, 'Height')
             
             logging.info('Removing Outliers from width')
@@ -108,10 +125,14 @@ class DataTransformation:
             logging.info('Removing Outliers from Price Of Sculpture')
             df_new = self.remove_outliers_iqr(df_new, 'Price Of Sculpture')
             
+            logging.info(f"Shape of the dataframe after removing outliers{df_new.shape}")
+            
+            logging.info('Separating target column from dataframe')
             X = df_new.drop('Cost', axis = 1)
             y = df_new['Cost']
             
             #Splitting training and testing data
+            logging.info(f'X_train feature names {X.columns} ')
             logging.info('Splitting training and testing data')
             X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = .3, random_state = 42)
             
@@ -124,20 +145,31 @@ class DataTransformation:
             transformation_file_dir = os.path.dirname(self.data_transformation_config.data_transformation_dir)
             os.makedirs(transformation_file_dir, exist_ok= True)
             logging.info('Saving X_train, X_test, y_train, y_test in data transformation path')
-            save_numpy_array_data(file_path=self.data_transformation_config.Xtrain_dataset, array=X_train)
-            save_numpy_array_data(file_path=self.data_transformation_config.Ytrain_dataset, array=y_train)
-            save_numpy_array_data(file_path=self.data_transformation_config.Xtest_dataset, array=X_test)
-            save_numpy_array_data(file_path=self.data_transformation_config.Ytest_dataset, array=y_test)
+            save_numpy_array_data(file_path=self.data_transformation_config.Xtrain_dataset_path, array=X_train)
+            save_numpy_array_data(file_path=self.data_transformation_config.Ytrain_dataset_path, array=y_train)
+            save_numpy_array_data(file_path=self.data_transformation_config.Xtest_dataset_path, array=X_test)
+            save_numpy_array_data(file_path=self.data_transformation_config.Ytest_dataset_path, array=y_test)
+            logging.info('Saving One Hot Encoder Object')
+            save_object(file_path= self.data_transformation_config.ohe_object_path, obj=encoder)
+            
+            logging.info('Successfully saved numpy arrays')
             
             
             #Creating Data Transformation Artifact
             logging.info('Creating data transformation Artifact')
-            data_transformation_artifact = artifact_entity.DataTransformationArtifact(X_train_array_path=self.data_transformation_config.Xtrain_dataset,
-                                                                                      X_test_array_path= self.data_transformation_config.Xtest_dataset,
-                                                                                      y_train_array_path=self.data_transformation_config.Ytrain_dataset,
-                                                                                      y_test_array_path=self.data_transformation_config.Ytest_dataset)
+            data_transformation_artifact = artifact_entity.DataTransformationArtifact(Xtrain_dataset_path =self.data_transformation_config.Xtrain_dataset_path,
+                                                                                      Xtest_dataset_path= self.data_transformation_config.Xtest_dataset_path,
+                                                                                      Ytrain_dataset_path=self.data_transformation_config.Ytrain_dataset_path,
+                                                                                      Ytest_dataset_path=self.data_transformation_config.Ytest_dataset_path,
+                                                                                      ohe_object_path= self.data_transformation_config.ohe_object_path
+                                                                                    )
             
+            logging.info(f'Data Transformation Artifact {data_transformation_artifact}')
+
+            
+            return data_transformation_artifact
+
             
         except Exception as e:
-            ShippingException(e, sys)
+            raise ShippingException(e, sys)
             
