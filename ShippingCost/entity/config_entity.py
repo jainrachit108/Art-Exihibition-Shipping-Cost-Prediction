@@ -3,6 +3,7 @@ from ShippingCost.exception import ShippingException
 import sys, os
 from datetime import datetime
 import pandas as pd
+import shutil
 TRAINING_FILE_NAME = 'training_file.csv'
 VALIDATED_FILE_NAME = 'validated_dataset.csv'
 X_TRAIN_DATA = 'X_train.npz'
@@ -11,14 +12,17 @@ Y_TRAIN_DATA = 'Y_train.npz'
 Y_TEST_DATA = 'Y_test.npz'
 OHE_OBJ_FILE = 'ohe_obj.pkl'
 MODEL_OBJ_FILE = 'model.pkl'
-
-
+SCALER_OBJ_FILE = 'scaler.pkl'
+dir_path = 'artifact'
 
 class TrainingPipelineConfig:
     
     def __init__(self):
         try:
-            self.artifact_dir = os.path.join(os.getcwd(),"artifact",f"{datetime.now().strftime('%m%d%Y__%H%M%S')}")
+            self.artifact_dir = os.path.join(os.getcwd(), dir_path)
+            if os.path.exists(dir_path):
+                # If it exists, remove it and its contents
+                shutil.rmtree(dir_path)
         except Exception as e:
             raise ShippingException(e,sys)
 
@@ -61,6 +65,7 @@ class DataTransformationConfig:
             self.Ytrain_dataset_path = os.path.join(self.data_transformation_dir,'Y_train array', Y_TRAIN_DATA)
             self.Ytest_dataset_path = os.path.join(self.data_transformation_dir,'Y_test array', Y_TEST_DATA)
             self.ohe_object_path = os.path.join(self.data_transformation_dir, 'ohe object', OHE_OBJ_FILE)
+            self.scaler_object_path = os.path.join(self.data_transformation_dir, 'scaler_object', SCALER_OBJ_FILE)
         except Exception as e:
             raise ShippingException(e, sys)
             

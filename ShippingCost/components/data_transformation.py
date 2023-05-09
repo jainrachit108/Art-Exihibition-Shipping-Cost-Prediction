@@ -28,11 +28,12 @@ class DataTransformation:
             
             
             
-    def random_imputation(self,df, col):
+    def random_imputation(self,df, cols):
         try:
-            imputed_col_values = np.random.choice(df[~df[col].isna()][col].values, size = df[col].isna().sum())
-            col_null_indices = df[df[col].isna()].index
-            df.loc[col_null_indices, col] = imputed_col_values
+            for col in cols:
+                imputed_col_values = np.random.choice(df[~df[col].isna()][col].values, size = df[col].isna().sum())
+                col_null_indices = df[df[col].isna()].index
+                df.loc[col_null_indices, col] = imputed_col_values
             return df
 
         except Exception as e:
@@ -67,17 +68,8 @@ class DataTransformation:
             df['Cost'] = df['Cost'].abs()
             logging.info(f"Null values before imputation in Height {df['Height'].isna().sum()}")
             logging.info('Randomly Imputing missing values of Height')
-            df = self.random_imputation(df , 'Height')
-            logging.info(f"Null values after imputation in Height {df['Height'].isna().sum()}")
-            logging.info('Randomly Imputing missing values of Width')
-            logging.info(f"Null values before imputation in Width {df['Width'].isna().sum()}")
-            df = self.random_imputation(df, 'Width')
-            logging.info(f"Null values after imputation in Width {df['Width'].isna().sum()}")
-            logging.info(f"Null values before imputation in Artist Reputation {df['Artist Reputation'].isna().sum()}")
-            logging.info('Randomly imputing the missing values of Artist Reputation')
-            df = self.random_imputation(df, 'Artist Reputation')
-            logging.info(f"Null values after imputation in Artist Reputation {df['Artist Reputation'].isna().sum()}")
-            
+            df = self.random_imputation(df , ['Height','Width', 'Artist Reputation', 'Remote Location','Transport','Material'])
+
             
             #One-hot Encoding 
             logging.info('One-hot Encoding the Categorical Columns')
@@ -89,9 +81,6 @@ class DataTransformation:
             df_encoded = encoder.fit_transform(df[['Material','International','Express Shipment', 'Installation Included','Transport','Fragile', 'Customer Information', 'Remote Location']])
             df_encoded = pd.DataFrame(df_encoded,  columns = encoder.get_feature_names_out(['Material','International','Express Shipment','Installation Included','Transport','Fragile', 'Customer Information', 'Remote Location']))
             
-            
-            
-            df_encoded.drop(['Transport_nan', 'Remote Location_nan','Material_nan'], axis = 1, inplace = True)
             logging.info('OneHotEncoding completed Successfully')
             
             
@@ -151,8 +140,10 @@ class DataTransformation:
             save_numpy_array_data(file_path=self.data_transformation_config.Ytest_dataset_path, array=y_test)
             logging.info('Saving One Hot Encoder Object')
             save_object(file_path= self.data_transformation_config.ohe_object_path, obj=encoder)
+            save_object(file_path=self.data_transformation_config.scaler_object_path, obj = scaler)
+        
+            logging.info('Successfully saved Train, test dataset, one hot encoder object and scaler object')
             
-            logging.info('Successfully saved numpy arrays')
             
             
             #Creating Data Transformation Artifact
@@ -161,7 +152,8 @@ class DataTransformation:
                                                                                       Xtest_dataset_path= self.data_transformation_config.Xtest_dataset_path,
                                                                                       Ytrain_dataset_path=self.data_transformation_config.Ytrain_dataset_path,
                                                                                       Ytest_dataset_path=self.data_transformation_config.Ytest_dataset_path,
-                                                                                      ohe_object_path= self.data_transformation_config.ohe_object_path
+                                                                                      ohe_object_path= self.data_transformation_config.ohe_object_path,
+                                                                                      scaler_object_path=self.data_transformation_config.scaler_object_path
                                                                                     )
             
             logging.info(f'Data Transformation Artifact {data_transformation_artifact}')

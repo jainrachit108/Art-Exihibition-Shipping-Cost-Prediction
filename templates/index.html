@@ -6,20 +6,20 @@
 <body>
 	<h1>Art Shipping Calculator</h1>
 	<form action="{{ url_for('predict')}}" method="post">
-		<label for="artist-name">Artist Name:</label>
-		<input type="text" id="artist-name" name="artist-name"><br><br>
+		<label for="artist_name">Artist Name:</label>
+		<input type="text" id="artist_name" name="artist_name"><br><br>
 		
-		<label for="artist-reputation">Artist Reputation (0-1):</label>
-		<input type="number" id="artist-reputation" name="artist-reputation" min="0" max="1" step="0.01"><br><br>
+		<label for="artist_reputation">Artist Reputation (0-1):</label>
+		<input type="number" id="artist_reputation" name="artist_reputation" min="0" max="1" step="0.01"><br><br>
 		
 		<label for="height">Height:</label>
-		<input type="number" id="height" name="height"><br><br>
+		<input type="number" id="height" name="height" step="0.01" required><br><br>
 		
 		<label for="width">Width:</label>
-		<input type="number" id="width" name="width"><br><br>
+		<input type="number" id="width" name="width" step="0.01" required><br><br>
 		
 		<label for="weight">Weight:</label>
-		<input type="number" id="weight" name="weight"><br><br>
+		<input type="number" id="weight" name="weight" step="0.01" required><br><br>
 		
 		<label for="material">Material:</label>
 		<select id="material" name="material">
@@ -32,20 +32,26 @@
 			<option value="Wood">Wood</option>
 		</select><br><br>
 		
+		<label for="price">Price Of Sculpture:</label>
+		<input type="number" id="price" name="price" step="0.01" required><br><br>
+
+        <label for="base_price">Base Shipping Price:</label>
+		<input type="number" id="base_price" name="base_price" step="0.01" required><br><br>
+
 		<label for="international">International:</label>
 		<select id="international" name="international">
 			<option value="Yes">Yes</option>
 			<option value="No">No</option>
 		</select><br><br>
 		
-		<label for="express-shipment">Express Shipment:</label>
-		<select id="express-shipment" name="express-shipment">
+		<label for="express_shipment">Express Shipment:</label>
+		<select id="express_shipment" name="express_shipment">
 			<option value="Yes">Yes</option>
 			<option value="No">No</option>
 		</select><br><br>
 		
-		<label for="installation-included">Installation Included:</label>
-		<select id="installation-included" name="installation-included">
+		<label for="installation_included">Installation Included:</label>
+		<select id="installation_included" name="installation_included">
 			<option value="Yes">Yes</option>
 			<option value="No">No</option>
 		</select><br><br>
@@ -63,14 +69,14 @@
 			<option value="No">No</option>
 		</select><br><br>
 		
-		<label for="customer-info">Customer Information:</label>
-		<select id="customer-info" name="customer-info">
+		<label for="customer_info">Customer Information:</label>
+		<select id="customer_info" name="customer_info">
 			<option value="Wealthy">Wealthy</option>
 			<option value="Working Class">Working Class</option>
 		</select><br><br>
 		
-		<label for="remote-location">Remote Location:</label>
-		<select id="remote-location" name="remote-location">
+		<label for="remote_location">Remote Location:</label>
+		<select id="remote_location" name="remote_location">
 		    <option value="Yes">Yes</option>
 		    <option value="No">No</option>
 	    </select><br><br>

@@ -71,13 +71,13 @@ def save_object(file_path: str, obj:object):
     except Exception as e:
         raise ShippingException(e, sys)
     
-def load_object(file_path):
+def load_object(file_path: str)->object:
     try:
         if not os.path.exists(file_path):
             raise Exception(f'File path {file_path} does not exists')
         
         logging.info(f'loading object from file path {file_path}')
-        with open(file_path) as file_obj:
+        with open(file_path,'rb') as file_obj:
             return dill.load(file_obj)
         
         

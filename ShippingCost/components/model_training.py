@@ -42,12 +42,12 @@ class ModelTrainer:
 
 
             param_grid = {
-                    'n_estimators': [50, 100, 200],
-                    'learning_rate': [0.1, 0.5],
-                    'min_child_weight': [1, 5],
-                    'subsample': [0.8, 1.0],
+                    'n_estimators': [90,100],
+                    'learning_rate': [0.1],
+                    'min_child_weight': [1,2],
+                    'subsample': [0.6,0.8],
                     'colsample_bytree': [0.6, 0.8],
-                    'max_depth': [3, 5,  10]
+                    'max_depth': [4, 5]
                     }
             
             grid_search = GridSearchCV(estimator=xgb, param_grid=param_grid, cv=5, scoring='neg_mean_squared_error')

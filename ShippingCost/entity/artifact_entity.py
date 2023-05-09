@@ -16,10 +16,10 @@ class DataTransformationArtifact:
         Ytrain_dataset_path: str
         Ytest_dataset_path: str
         ohe_object_path : str
+        scaler_object_path : str
         
 @dataclass
 class ModelTrainerArtifact:
     
     model_obj_path : str
     
-        
