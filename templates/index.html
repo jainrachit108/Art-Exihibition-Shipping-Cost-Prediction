@@ -3,7 +3,91 @@
 <head>
 	<title>Art Shipping Calculator</title>
 </head>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f2f2f2;
+        color: #333;
+        margin: 0;
+        padding: 0;
+    }
+
+    h1 {
+        text-align: center;
+        margin-top: 50px;
+        font-size: 36px;
+    }
+
+    form {
+        margin: 50px auto;
+        padding: 30px;
+        background-color: #fff;
+        max-width: 800px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 10px;
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    select {
+        padding: 10px;
+        font-size: 16px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    input[type="submit"] {
+        background-color: #4CAF50;
+        color: #fff;
+        font-size: 16px;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        cursor: pointer;
+        margin-top: 20px;
+        width: auto;
+    }
+
+    input[type="submit"]:hover {
+        background-color: #3e8e41;
+        color: #fff;
+    }
+
+    .output-container {
+        margin: 50px auto;
+        padding: 30px;
+        background-color: #fff;
+        max-width: 800px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        text-align: center;
+    }
+
+    .result-text {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    .result-value {
+        font-size: 36px;
+        font-weight: bold;
+        color: #4CAF50;
+        margin-bottom: 20px;
+    }
+
+</style>
 <body>
+    
 	<h1>Art Shipping Calculator</h1>
 	<form action="{{ url_for('predict')}}" method="post">
 		<label for="artist_name">Artist Name:</label>
@@ -82,10 +166,16 @@
 	    </select><br><br>
 	
 	    <input type="submit" value="Calculate Shipping Cost">
+        {% if prediction_text %}
+        <div class="result">
+            <h2>Shipping Cost Estimate</h2>
+            <p><strong>Estimated Cost:</strong> {{ prediction_text }}</p>
+        </div>
+        {% endif %}
 </form>
 <br>
 <br>
-{{prediction_text}}
+
 
 
 </body>
