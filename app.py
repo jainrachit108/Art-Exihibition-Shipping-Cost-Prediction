@@ -9,7 +9,7 @@ def app():
     artist_reputation = st.number_input("Artist Reputation (0 to 1)", min_value=0.0, max_value=1.0, value=0.5, step=0.01)
     height = st.number_input("Height (in cm)", min_value=0, max_value=None, value=100)
     width = st.number_input("Width (in cm)", min_value=0, max_value=None, value=50)
-    weight = st.number_input("Weight (in kg)", min_value=0, max_value=None, value=5.0)
+    weight = st.number_input("Weight (in kg)", min_value=0, max_value=None, value = 250)
     material = st.selectbox("Material", ["Wood", "Brass", "Aluminium", "Bronze", "Marble"])
     base_price = st.number_input("Base Price (in USD)", min_value=0, max_value=None, value=200)
     price = st.number_input("Price (in USD)", min_value=0, max_value=None, value=250)
