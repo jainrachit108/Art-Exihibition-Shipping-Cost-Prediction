@@ -7,16 +7,16 @@ def app():
     st.title("Shipping Cost Prediction App")
 
     artist_reputation = st.number_input("Artist Reputation (0 to 1)", min_value=0.0, max_value=1.0, value=0.5, step=0.01)
-    height = st.number_input("Height (in cm)", min_value=0, max_value=None, value=100)
-    width = st.number_input("Width (in cm)", min_value=0, max_value=None, value=50)
-    weight = st.number_input("Weight (in kg)", min_value=0, max_value=None, value = 10)
+    height = st.number_input("Height", min_value=0, max_value=None, value=21.5)
+    width = st.number_input("Width", min_value=0, max_value=None, value=8.5)
+    weight = st.number_input("Weight", min_value=0, max_value=None, value = 3210.5)
     material = st.selectbox("Material", ["Wood", "Brass", "Aluminium", "Bronze", "Stone","Clay", "Marble"])
-    base_price = st.number_input("Base Price (in USD)", min_value=0, max_value=None, value=200)
-    price = st.number_input("Price (in USD)", min_value=0, max_value=None, value=250)
+    base_price = st.number_input("Base Price", min_value=0, max_value=None, value=30.5)
+    price = st.number_input("Price", min_value=0, max_value=None, value=15.5)
     international = st.selectbox("International", ["Yes", "No"])
     express_shipment = st.selectbox("Express Shipment", ["Yes", "No"])
     installation_included = st.selectbox("Installation Included", ["Yes", "No"])
-    transportation = st.selectbox("Transportation Included", ["Yes", "No"])
+    transportation = st.selectbox("Transportation Included", ['Airways','Waterways','Roadways'])
     fragile = st.selectbox("Fragile", ["Yes", "No"])
     customer_info = st.selectbox("Customer Information", ["Wealthy", "Working Class"])
     remote_location = st.selectbox("Remote Location", ["Yes", "No"])
@@ -28,7 +28,7 @@ def app():
                             remote_location=remote_location, transportation=transportation)
 
         cost = data.predict()
-        st.success(f"The estimated shipping cost is {cost[0]:.2f} USD")
+        st.success(f"The estimated shipping cost is {cost[0]:.2f} ")
 
 
 if __name__ == '__main__':
