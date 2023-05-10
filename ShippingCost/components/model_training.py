@@ -13,7 +13,6 @@ from ShippingCost.utils import load_numpy_array_data, save_object
 
 
 
-
 class ModelTrainer:
     def __init__(self, data_transformation_artifact = artifact_entity.DataTransformationArtifact,
                  model_training_config = config_entity.ModelTrainingConfig) -> None:
@@ -36,6 +35,9 @@ class ModelTrainer:
             y_test = load_numpy_array_data(file_path= self.data_transformation_artifact.Ytest_dataset_path)
             logging.info('Successfully loaded X_train, X_test, y_train, y_test')
             
+            
+            
+
             logging.info('Creating Model Regressor object')
             xgb  = XGBRegressor()
 

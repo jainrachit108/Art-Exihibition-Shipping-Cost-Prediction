@@ -36,6 +36,8 @@ class DataValidation:
             df = pd.read_csv(self.data_ingestion_artifact.train_file_path)
             logging.info('Checking for missing values in dataframe')
             df_validated = self.drop_missing_values_columns(df)
+            
+            df.drop(['Customer Id','Artist Name','Scheduled Date','Delivery Date','Customer Location'], axis = 1, inplace = True)
             logging.info('Successfully Validated the dataset')
             logging.info('Storing the validated dataset in artifacts folder')
             validated_file_dir = os.path.dirname(self.data_validation_config.validated_dataset_path)

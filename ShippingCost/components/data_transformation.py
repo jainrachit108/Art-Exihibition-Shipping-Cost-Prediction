@@ -39,24 +39,26 @@ class DataTransformation:
         except Exception as e:
             raise ShippingException(e, sys)
     
-    def remove_outliers_iqr(self,dataframe, column):
+    def remove_outliers_iqr(self,dataframe, cols):
         """
         Remove outliers from a pandas DataFrame using the IQR method.
         
         Parameters:
         dataframe (pandas.DataFrame): Input DataFrame.
-        column (str): Name of column to remove outliers from.
+        cols (str): List of columns to remove outliers from.
         
         Returns:
         pandas.DataFrame: DataFrame with outliers removed.
+        
         """
-        data = dataframe[column]
-        Q1 = data.quantile(0.25)
-        Q3 = data.quantile(0.75)
-        IQR = Q3 - Q1
-        lower_bound = Q1 - 1.5 * IQR
-        upper_bound = Q3 + 1.5 * IQR
-        cleaned_dataframe = dataframe[(data > lower_bound) & (data < upper_bound)]
+        for col in cols:
+            data = dataframe[col]
+            Q1 = data.quantile(0.25)
+            Q3 = data.quantile(0.75)
+            IQR = Q3 - Q1
+            lower_bound = Q1 - 1.5 * IQR
+            upper_bound = Q3 + 1.5 * IQR
+            cleaned_dataframe = dataframe[(data > lower_bound) & (data < upper_bound)]
         return cleaned_dataframe
             
     def initiate_data_transformation(self):
@@ -66,26 +68,36 @@ class DataTransformation:
             df = pd.read_csv(self.data_validation_artifact.validated_dataset_path)
             #Randomly imputing missing values of Height, Width and Artist Reputation
             df['Cost'] = df['Cost'].abs()
+            
+            
             logging.info(f"Null values before imputation in Height {df['Height'].isna().sum()}")
             logging.info('Randomly Imputing missing values of Height')
             df = self.random_imputation(df , ['Height','Width', 'Artist Reputation', 'Remote Location','Transport','Material'])
 
             
+            #Finding Numerical and Categorical Columns 
+            cat_cols = [col for col in df.columns if df[col].dtype == 'object']
+            num_cols = [col for col in df.columns if col not in cat_cols]
+            num_cols.remove('Cost')
+            
+            logging.info(f'Categorical Columns {cat_cols}')
+            logging.info(f'Numerical Columns {num_cols}')
+            
             #One-hot Encoding 
+            
             logging.info('One-hot Encoding the Categorical Columns')
             logging.info(f'Shape of Dataframe before one hot encoding {df.shape}')
             logging.info('Creating one-hot Encoder object')
             encoder = OneHotEncoder(sparse_output= False, handle_unknown = 'ignore')
             
             logging.info('One hot encoding "Material, International, Express Shipment, Installation Included, Transport, Fragile, Customer Information, Remote Location')
-            df_encoded = encoder.fit_transform(df[['Material','International','Express Shipment', 'Installation Included','Transport','Fragile', 'Customer Information', 'Remote Location']])
-            df_encoded = pd.DataFrame(df_encoded,  columns = encoder.get_feature_names_out(['Material','International','Express Shipment','Installation Included','Transport','Fragile', 'Customer Information', 'Remote Location']))
+            df_encoded = encoder.fit_transform(df[cat_cols])
+            df_encoded = pd.DataFrame(df_encoded,  columns = encoder.get_feature_names_out(cat_cols))
             
             logging.info('OneHotEncoding completed Successfully')
             
             
-            numerical_cols = ['Artist Reputation','Height','Width'	,'Weight','Price Of Sculpture','Base Shipping Price']
-            X = pd.concat([df[numerical_cols] , df_encoded], axis= 1)
+            X = pd.concat([df[num_cols] , df_encoded], axis= 1)
             logging.info(f'Shape of Dataframe after one hot encoding {X.shape}')
 
             
@@ -99,21 +111,14 @@ class DataTransformation:
 
             df_new = pd.concat([X , df['Cost']], axis =1)
 
+            
+            
             #Removing outliers
             
-            logging.info('Removing Outliers from Height')
+            logging.info("Removing Outliers from  'Height','Width','Weight','Price Of Sculpture'")
             logging.info(f"Shape of the dataframe before removing outliers{df_new.shape}")
-            df_new = self.remove_outliers_iqr(df_new, 'Height')
-            
-            logging.info('Removing Outliers from width')
-            df_new = self.remove_outliers_iqr(df_new, 'Width')
-
-            logging.info('Removing Outliers from Weight')
-            df_new = self.remove_outliers_iqr(df_new, 'Weight')
-
-            logging.info('Removing Outliers from Price Of Sculpture')
-            df_new = self.remove_outliers_iqr(df_new, 'Price Of Sculpture')
-            
+            df_new = self.remove_outliers_iqr(df_new, [ 'Height','Width','Weight','Price Of Sculpture'])
+                        
             logging.info(f"Shape of the dataframe after removing outliers{df_new.shape}")
             
             logging.info('Separating target column from dataframe')
@@ -130,9 +135,15 @@ class DataTransformation:
             scaler = RobustScaler()
             X_train = scaler.fit_transform(X_train)
             X_test = scaler.transform(X_test)
+            
+            
+        
             logging.info('Creating transformation path directory')
             transformation_file_dir = os.path.dirname(self.data_transformation_config.data_transformation_dir)
             os.makedirs(transformation_file_dir, exist_ok= True)
+            
+            
+            #Saving X_train, X_test, y_train, y_test in data transformation path
             logging.info('Saving X_train, X_test, y_train, y_test in data transformation path')
             save_numpy_array_data(file_path=self.data_transformation_config.Xtrain_dataset_path, array=X_train)
             save_numpy_array_data(file_path=self.data_transformation_config.Ytrain_dataset_path, array=y_train)
@@ -143,6 +154,7 @@ class DataTransformation:
             save_object(file_path=self.data_transformation_config.scaler_object_path, obj = scaler)
         
             logging.info('Successfully saved Train, test dataset, one hot encoder object and scaler object')
+            
             
             
             
