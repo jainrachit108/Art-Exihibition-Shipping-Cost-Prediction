@@ -48,20 +48,20 @@ class ShippingData:
     def get_data_as_dataframe(self):
         try:
             input_data = {
-                'Artist Reputation': [self.artist_reputation],
-                'Height' : [self.height],
-                'Width' : [self.width],
-                'Weight' : [self.weight],
-                'Material' : [self.material],
-                'Price Of Sculpture': [self.price],
-                'Base Shipping Price': [self.base_price],
-                'International' : [self.international],
-                'Express Shipment' : [self.express_shipment],
-                'Installation Included': [self.installation_included],
-                'Transport': [self.transportation],
-                'Fragile' : [self.fragile],
-                'Customer Information': [self.customer_info],
-                'Remote Location' : [self.remote_location]
+                'Artist Reputation': self.artist_reputation,
+                'Height' : self.height,
+                'Width' : self.width,
+                'Weight' : self.weight,
+                'Material' : self.material,
+                'Price Of Sculpture': self.price,
+                'Base Shipping Price': self.base_price,
+                'International' : self.international,
+                'Express Shipment' : self.express_shipment,
+                'Installation Included': self.installation_included,
+                'Transport': self.transportation,
+                'Fragile' : self.fragile,
+                'Customer Information': self.customer_info,
+                'Remote Location' : self.remote_location
                 }
             
             return pd.DataFrame(input_data)
