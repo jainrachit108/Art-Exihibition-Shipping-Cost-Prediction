@@ -77,8 +77,8 @@ class DataTransformation:
             
             #Finding Numerical and Categorical Columns 
             cat_cols = [col for col in df.columns if df[col].dtype == 'object']
-            num_cols = [col for col in df.columns if col not in cat_cols]
-            num_cols.remove('Cost')
+            num_cols = ['Artist Reputation','Height','Width','Weight','Price Of Sculpture','Base Shipping Price']
+            
             
             logging.info(f'Categorical Columns {cat_cols}')
             logging.info(f'Numerical Columns {num_cols}')
