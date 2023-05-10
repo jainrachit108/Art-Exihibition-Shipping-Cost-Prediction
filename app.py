@@ -18,7 +18,7 @@ def app():
     installation_included = st.selectbox("Installation Included", ["Yes", "No"])
     transportation = st.selectbox("Transportation Included", ["Yes", "No"])
     fragile = st.selectbox("Fragile", ["Yes", "No"])
-    customer_info = st.selectbox("Customer Information", ["No details", "Basic", "Advanced"])
+    customer_info = st.selectbox("Customer Information", ["Wealthy", "Working"])
     remote_location = st.selectbox("Remote Location", ["Yes", "No"])
 
     if st.button("Predict Shipping Cost"):

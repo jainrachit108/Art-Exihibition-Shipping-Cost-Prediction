@@ -1,9 +1,8 @@
 import sys, os
 import pandas as pd
 from ShippingCost.utils import load_object
-from logger import logging
+from ShippingCost.logger import logging
 from ShippingCost.exception import ShippingException
-from ShippingCost.entity import artifact_entity
    
 ohe_obj_path = 'artifact\data_transformation\ohe object\ohe_obj.pkl'
 scaler_obj_path = 'artifact\data_transformation\scaler_object\scaler.pkl'
