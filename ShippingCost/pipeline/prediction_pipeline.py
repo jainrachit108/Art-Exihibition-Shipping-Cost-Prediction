@@ -6,14 +6,14 @@ from ShippingCost.exception import ShippingException
 from ShippingCost.entity import artifact_entity
 
 
-ohe_obj = artifact_entity.DataTransformationArtifact.ohe_object_path
-scaler_obj = artifact_entity.DataTransformationArtifact.scaler_object_path
-model_obj = artifact_entity.ModelTrainerArtifact.model_obj_path
+# ohe_obj = artifact_entity.DataTransformationArtifact.ohe_object_path
+# scaler_obj = artifact_entity.DataTransformationArtifact.scaler_object_path
+# model_obj = artifact_entity.ModelTrainerArtifact.model_obj_path
    
    
-ohe_obj_path = os.path.join(ohe_obj, 'ohe_obj.pkl')   
-scaler_obj_path = os.path.join(scaler_obj, 'sclaer.pkl')
-model_obj_path = os.path.join(model_obj, 'model.pkl')
+ohe_obj_path = os.path.join('artifact', 'data_transformation','ohe object','ohe_obj.pkl')   
+scaler_obj_path = os.path.join('artifact', 'data_transformation','scaler_object','scaler.pkl')
+model_obj_path = os.path.join('artifact', 'Model trainer', 'model_object','model.pkl')
 # ohe_obj_path = 'artifact\data_transformation\ohe object\ohe_obj.pkl'
 # scaler_obj_path = 'artifact\data_transformation\scaler_object\scaler.pkl'
 # model_obj_path = 'artifact\Model trainer\model_object\model.pkl'
