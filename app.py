@@ -1,35 +1,42 @@
-import streamlit as st
+from flask import Flask, render_template, request
 from ShippingCost.pipeline.prediction_pipeline import ShippingData
 
 
-def app():
-    st.set_page_config(page_title="Shipping Cost Prediction App")
-    st.title("Shipping Cost Prediction App")
+app = Flask(__name__)
 
-    artist_reputation = st.number_input("Artist Reputation (0 to 1)", min_value=0.0, max_value=1.0, value=0.5, step=0.01)
-    height = st.number_input("Height (in cm)", min_value=0, max_value=None, value=100)
-    width = st.number_input("Width (in cm)", min_value=0, max_value=None, value=50)
-    weight = st.number_input("Weight (in kg)", min_value=0, max_value=None, value = 10)
-    material = st.selectbox("Material", ["Wood", "Brass", "Aluminium", "Bronze", "Stone","Clay", "Marble"])
-    base_price = st.number_input("Base Price (in USD)", min_value=0, max_value=None, value=200)
-    price = st.number_input("Price (in USD)", min_value=0, max_value=None, value=250)
-    international = st.selectbox("International", ["Yes", "No"])
-    express_shipment = st.selectbox("Express Shipment", ["Yes", "No"])
-    installation_included = st.selectbox("Installation Included", ["Yes", "No"])
-    transportation = st.selectbox("Transportation Included", ["Yes", "No"])
-    fragile = st.selectbox("Fragile", ["Yes", "No"])
-    customer_info = st.selectbox("Customer Information", ["Wealthy", "Working Class"])
-    remote_location = st.selectbox("Remote Location", ["Yes", "No"])
 
-    if st.button("Predict Shipping Cost"):
-        data = ShippingData(artist_reputation=artist_reputation, height=height, width=width, weight=weight, material=material,
-                            base_price=base_price, price=price, international=international, express_shipment=express_shipment,
-                            customer_info=customer_info, fragile=fragile, installation_included=installation_included,
-                            remote_location=remote_location, transportation=transportation)
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+
+@app.route('/predict', methods = ['GET', 'POST'])
+def predict():
+    if request.method == 'GET':
+        return render_template('index.html')
+
+    else:
+
+        artist_reputation = float(request.form['artist_reputation'])
+        height = float(request.form.get('height'))
+        width = float(request.form.get('width'))
+        weight = float(request.form.get('weight'))
+        material = request.form['material']
+        price = float(request.form.get('price'))
+        base_price = float(request.form.get('base_price'))
+        international = request.form['international']
+        express_shipment = request.form['express_shipment']
+        installation_included = request.form['installation_included']
+        transportation = request.form['transportation']
+        fragile = request.form['fragile']
+        customer_info = request.form['customer_info']
+        remote_location = request.form['remote_location']
+
+        data = ShippingData(artist_reputation=artist_reputation, height=height, width=width,weight=weight,material=material,base_price=base_price,price=price, 
+                     international=international,express_shipment=express_shipment,customer_info=customer_info,fragile=fragile,installation_included=installation_included,remote_location=remote_location,transportation=transportation)
 
         cost = data.predict()
-        st.success(f"The estimated shipping cost is {cost[0]:.2f} USD")
-
-
-if __name__ == '__main__':
-    app()
+        return render_template('index.html', prediction_text = cost[0])
+    
+if __name__ =='__main__':
+    app.run(debug=True)

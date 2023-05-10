@@ -72,7 +72,7 @@ class ShippingData:
     def predict(self):
             try:
                 df = self.get_data_as_dataframe()
-                logging.info('Load-ming Encoder Object')
+                logging.info('Loading Encoder Object')
                 ohe_encoder = load_object(file_path=ohe_obj_path)
                 logging.info('Performating One Hot Encoding ')
                 
