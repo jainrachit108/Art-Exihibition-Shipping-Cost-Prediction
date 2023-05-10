@@ -21,6 +21,7 @@ class DataIngestion:
             logging.info('Extracting dataset from mongodb')
             df: pd.DataFrame = utils.get_collection_as_dataFrame(self.data_ingestion_config.database_name, self.data_ingestion_config.collection_name)
             logging.info('Extracted Dataset successfully')
+            logging.info(f" Shape of the dataframe is : {df.shape}")
             logging.info('Creating data ingestion artifact folder to store training dataset')
             train_file_dir = os.path.dirname(self.data_ingestion_config.training_file_path)
             os.makedirs(train_file_dir, exist_ok=True)

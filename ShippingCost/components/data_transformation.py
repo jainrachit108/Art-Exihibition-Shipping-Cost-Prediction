@@ -75,7 +75,7 @@ class DataTransformation:
             logging.info('One-hot Encoding the Categorical Columns')
             logging.info(f'Shape of Dataframe before one hot encoding {df.shape}')
             logging.info('Creating one-hot Encoder object')
-            encoder = OneHotEncoder(sparse = False, handle_unknown = 'ignore')
+            encoder = OneHotEncoder(sparse_output= False, handle_unknown = 'ignore')
             
             logging.info('One hot encoding "Material, International, Express Shipment, Installation Included, Transport, Fragile, Customer Information, Remote Location')
             df_encoded = encoder.fit_transform(df[['Material','International','Express Shipment', 'Installation Included','Transport','Fragile', 'Customer Information', 'Remote Location']])
