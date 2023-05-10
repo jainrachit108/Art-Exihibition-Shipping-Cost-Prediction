@@ -7,3 +7,5 @@ Though many companies have made shipping consumer goods a relatively quick and p
 
 We will predict the cost required to ship these sculptures to customers based on the information provided in the dataset.
 
+Click on the link and predict the cost of Shipment for your Art Piece.
+https://jainrachit108-art-exihibition-shipping-cost-predicti-app-gho446.streamlit.app/
